@@ -834,17 +834,121 @@ textarea {
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-.ingredient-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-.ingredient-chip {
-  padding: 6px 9px;
+.ingredient-table-wrap {
+  overflow: hidden;
   border: 1px solid #e1e6dd;
-  border-radius: 2px;
-  color: #5b685e;
+  border-radius: 3px;
+  background: #fffefa;
+}
+.ingredient-rating-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.ingredient-table-heading {
+  padding: 10px 8px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+}
+.ingredient-table-heading + .ingredient-table-heading,
+.ingredient-rating-table td + td {
+  border-left: 1px solid #e1e6dd;
+}
+.ingredient-table-heading span {
+  margin-left: 5px;
+  color: currentColor;
   font-size: 9px;
+  font-weight: 500;
+  opacity: 0.75;
+}
+.ingredient-table-heading--good {
+  background: #eaf2df;
+  color: #416b37;
+}
+.ingredient-table-heading--okay {
+  background: #fbf1df;
+  color: #936020;
+}
+.ingredient-table-heading--bad {
+  background: #f8e9e6;
+  color: #9c4036;
+}
+.ingredient-rating-table td {
+  padding: 6px;
+  vertical-align: top;
+  border-top: 1px solid #e8ece5;
+}
+.ingredient-table-item {
+  min-height: 44px;
+  padding: 7px;
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  border-radius: 2px;
+  background: #f7f8f3;
+}
+.ingredient-table-item--flagged {
+  background: #fff5e9;
+}
+.ingredient-table-name {
+  overflow-wrap: anywhere;
+  color: #35483a;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.ingredient-chip-category {
+  color: #79857b;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.ingredient-table-item--flagged .ingredient-chip-category {
+  color: #8b6436;
+}
+.ingredient-table-cell--empty {
+  color: transparent;
+}
+.ingredient-rating-note {
+  margin: -3px 0 10px;
+  color: #7b877d;
+  font-size: 9px;
+  line-height: 1.5;
+}
+.ingredient-chip-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ingredient-chip-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.ingredient-chip-rating::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+.ingredient-chip-rating--good {
+  color: #416b37;
+}
+.ingredient-chip-rating--okay {
+  color: #936020;
+}
+.ingredient-chip-rating--bad {
+  color: #9c4036;
+}
+.ingredient-chip--flag .ingredient-chip-category {
+  color: #8b6436;
 }
 .ingredient-chip--flag {
   border-color: #f0dbbd;

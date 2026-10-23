@@ -640,6 +640,169 @@ function safeProductImage(image) {
   }
 }
 
+function classifyIngredient(ingredient) {
+  const name = ingredient.toLocaleLowerCase();
+  const categories = [
+    { label: "Water", terms: ["water", "carbonated water"] },
+    {
+      label: "Sweetener",
+      terms: [
+        "sugar",
+        "syrup",
+        "honey",
+        "agave",
+        "molasses",
+        "dextrose",
+        "fructose",
+        "sucralose",
+        "aspartame",
+        "stevia",
+        "sweetener",
+        "lactose",
+      ],
+    },
+    {
+      label: "Oil or fat",
+      terms: ["oil", "fat", "butter", "shortening", "ghee"],
+    },
+    {
+      label: "Grain or starch",
+      terms: [
+        "oat",
+        "wheat",
+        "rice",
+        "corn",
+        "maize",
+        "barley",
+        "rye",
+        "quinoa",
+        "flour",
+        "starch",
+      ],
+    },
+    {
+      label: "Dairy or culture",
+      terms: [
+        "milk",
+        "cream",
+        "yogurt",
+        "yoghurt",
+        "cheese",
+        "whey",
+        "casein",
+        "buttermilk",
+        "culture",
+        "lactobacillus",
+      ],
+    },
+    {
+      label: "Legume or protein",
+      terms: [
+        "soy",
+        "soya",
+        "pea protein",
+        "protein isolate",
+        "lentil",
+        "chickpea",
+        "bean",
+        "egg",
+        "gelatin",
+        "nuts",
+        "almond",
+        "peanut",
+      ],
+    },
+    {
+      label: "Fruit or vegetable",
+      terms: [
+        "fruit",
+        "cranberr",
+        "apple",
+        "banana",
+        "lemon",
+        "lime",
+        "tomato",
+        "vegetable",
+        "juice",
+        "onion",
+        "garlic",
+      ],
+    },
+    {
+      label: "Salt or mineral",
+      terms: [
+        "salt",
+        "sodium",
+        "calcium",
+        "iron",
+        "zinc",
+        "phosphate",
+        "bicarbonate",
+        "chloride",
+        "mineral",
+      ],
+    },
+    {
+      label: "Preservative",
+      terms: ["preservative", "benzoate", "sorbate", "nitrite", "nitrate"],
+    },
+    {
+      label: "Coloring",
+      terms: ["colorant", "colour", "color", "e150", "e160", "e100"],
+    },
+    {
+      label: "Flavoring",
+      terms: ["flavor", "flavour", "vanilla extract", "spice"],
+    },
+    {
+      label: "Additive or stabilizer",
+      terms: [
+        "gum",
+        "emulsifier",
+        "lecithin",
+        "maltodextrin",
+        "stabilizer",
+        "thickener",
+        "acidity regulator",
+        "citric acid",
+        "ascorbic acid",
+        "dipotassium",
+        "modified",
+      ],
+    },
+  ];
+  return (
+    categories.find((category) =>
+      category.terms.some((term) => name.includes(term)),
+    )?.label || "Other"
+  );
+}
+
+function rateIngredient(ingredient) {
+  const name = ingredient.toLocaleLowerCase();
+  const matches = commonFlags.filter((flag) =>
+    flag.terms.some((term) => name.includes(term)),
+  );
+  const strongestFlag = Math.max(0, ...matches.map((flag) => flag.points));
+  if (strongestFlag >= 10) return "Bad";
+
+  const category = classifyIngredient(ingredient);
+  if (
+    matches.length > 0 ||
+    [
+      "Oil or fat",
+      "Salt or mineral",
+      "Preservative",
+      "Flavoring",
+      "Additive or stabilizer",
+      "Other",
+    ].includes(category)
+  ) {
+    return "Okay";
+  }
+  return "Good";
+}
+
 function escapeText(value) {
   return String(value).replace(
     /[&<>"']/g,
@@ -656,16 +819,40 @@ function renderResult(product) {
   )
     ? product.rating.toLowerCase()
     : "unavailable";
-  const chips = product.ingredients
-    .map((ingredient) => {
-      const flagged = product.flagged.some(
-        (flag) =>
-          ingredient.toLocaleLowerCase().includes(flag.toLocaleLowerCase()) ||
-          flag.toLocaleLowerCase().includes(ingredient.toLocaleLowerCase()),
-      );
-      return `<span class="ingredient-chip${flagged ? " ingredient-chip--flag" : ""}">${escapeText(ingredient)}</span>`;
-    })
-    .join("");
+  const ingredientsByRating = { Good: [], Okay: [], Bad: [] };
+  (product.ingredients || []).forEach((ingredient) => {
+    const flagged = product.flagged.some(
+      (flag) =>
+        ingredient.toLocaleLowerCase().includes(flag.toLocaleLowerCase()) ||
+        flag.toLocaleLowerCase().includes(ingredient.toLocaleLowerCase()),
+    );
+    const category = classifyIngredient(ingredient);
+    const rating = rateIngredient(ingredient);
+    ingredientsByRating[rating].push({ ingredient, category, flagged });
+  });
+  const ratingColumns = ["Good", "Okay", "Bad"];
+  const ingredientRowCount = Math.max(
+    1,
+    ...ratingColumns.map((rating) => ingredientsByRating[rating].length),
+  );
+  const ingredientRows = Array.from(
+    { length: ingredientRowCount },
+    (_, index) =>
+      `<tr>${ratingColumns
+        .map((rating) => {
+          const item = ingredientsByRating[rating][index];
+          return item
+            ? `<td><div class="ingredient-table-item${item.flagged ? " ingredient-table-item--flagged" : ""}"><span class="ingredient-table-name">${escapeText(item.ingredient)}</span><span class="ingredient-chip-category">${escapeText(item.category)}</span></div></td>`
+            : '<td class="ingredient-table-cell--empty"><span aria-hidden="true">·</span></td>';
+        })
+        .join("")}</tr>`,
+  ).join("");
+  const ingredientTable = `<div class="ingredient-table-wrap"><table class="ingredient-rating-table"><thead><tr>${ratingColumns
+    .map(
+      (rating) =>
+        `<th class="ingredient-table-heading ingredient-table-heading--${rating.toLowerCase()}" scope="col">${rating}<span>${ingredientsByRating[rating].length}</span></th>`,
+    )
+    .join("")}</tr></thead><tbody>${ingredientRows}</tbody></table></div>`;
   const insights = [
     ...product.positives.map(
       (item) =>
@@ -731,8 +918,9 @@ function renderResult(product) {
   const ingredientMarkup =
     product.ingredientsAvailable === false
       ? '<p class="nutrition-unavailable">Ingredient information is unavailable for this product.</p>'
-      : chips ||
-        '<p class="nutrition-unavailable">No ingredient text was provided.</p>';
+      : product.ingredients?.length
+        ? ingredientTable
+        : '<p class="nutrition-unavailable">No ingredient text was provided.</p>';
   const nutrients = nutritionEntries(product.nutrition);
   const nutritionMarkup = product.isSample
     ? ""
@@ -753,6 +941,7 @@ function renderResult(product) {
       <div class="classification classification--${ratingClass}"><span class="classification-dot"></span>${ratingText}</div>
 			<div class="analysis-divider"></div>
 			<h4 class="detail-label">Ingredients in this check</h4>
+      <p class="ingredient-rating-note">Good / Okay / Bad are quick label heuristics, not a health or dietary assessment.</p>
       <div class="ingredient-chips">${ingredientMarkup}</div>
       ${nutritionMarkup}
 			<div class="analysis-divider"></div>
