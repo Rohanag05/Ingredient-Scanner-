@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f1" />
+    <meta
+      name="description"
+      content="A clearer way to understand the ingredient labels on everyday products."
+    />
+    <title>Goodlabel — Know what's in it</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,20,1;9..144,700,20,1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"
+      defer
+    ></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Goodlabel home">
+        <span class="brand-mark" aria-hidden="true"
+          ><span></span><span></span><span></span
+        ></span>
+        <span>goodlabel</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#alternatives">Alternatives</a>
+      </nav>
+      <a class="header-cta" href="#scanner"
+        >Check a product <span aria-hidden="true">↗</span></a
+      >
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="eyebrow-dot"></span> A little more clarity at the shelf
+          </p>
+          <h1 id="hero-title">Know what's<br />in <em>your</em> food.</h1>
+          <p class="hero-intro">
+            Ingredient labels can be a lot. Get a straightforward read on what's
+            inside, and find a better fit for you.
+          </p>
+          <div class="hero-note">
+            <span class="note-spark" aria-hidden="true">✳</span
+            ><span
+              >No account. No judgement. Just the label, made clearer.</span
+            >
+          </div>
+        </div>
+        <div
+          class="hero-visual"
+          aria-label="Fresh produce arranged for a grocery shop"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=85"
+            alt="Colorful fresh produce at a market"
+          />
+          <div class="visual-sticker">
+            <span class="sticker-star" aria-hidden="true">✳</span
+            ><span>Know better.<br />Choose yours.</span>
+          </div>
+          <div class="visual-caption">
+            <span class="caption-line"></span> YOUR NEXT SHOP, A LITTLE CLEARER
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="scanner-section"
+        id="scanner"
+        aria-labelledby="scanner-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">
+              <span class="eyebrow-number">01</span> Start with a label
+            </p>
+            <h2 id="scanner-title">What's in your basket?</h2>
+          </div>
+          <p class="section-aside">
+            Try a product name, or paste the ingredients straight from the pack.
+          </p>
+        </div>
+
+        <div class="scanner-layout">
+          <div class="scanner-main">
+            <div
+              class="mode-tabs"
+              role="tablist"
+              aria-label="Choose what to check"
+            >
+              <button
+                class="mode-tab is-active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="product-panel"
+                id="product-tab"
+                data-mode="product"
+              >
+                Product name
+              </button>
+              <button
+                class="mode-tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="ingredients-panel"
+                id="ingredients-tab"
+                data-mode="ingredients"
+              >
+                Ingredient list
+              </button>
+            </div>
+
+            <form
+              id="product-panel"
+              class="entry-panel"
+              role="tabpanel"
+              aria-labelledby="product-tab"
+            >
+              <label class="field-label" for="product-input"
+                >Search a product</label
+              >
+              <div class="input-row">
+                <span class="input-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="10.8" cy="10.8" r="6.8" />
+                    <path d="m16 16 4.5 4.5" />
+                  </svg>
+                </span>
+                <input
+                  id="product-input"
+                  name="product"
+                  type="search"
+                  placeholder="Try “oat milk” or “Greek yogurt”"
+                  autocomplete="off"
+                  aria-describedby="product-help"
+                />
+                <button class="submit-button" type="submit">
+                  Check it <span aria-hidden="true">→</span>
+                </button>
+              </div>
+              <p class="field-help" id="product-help">
+                Search the Open Food Facts catalog by product name or brand.
+              </p>
+            </form>
+
+            <form
+              id="ingredients-panel"
+              class="entry-panel"
+              role="tabpanel"
+              aria-labelledby="ingredients-tab"
+              hidden
+            >
+              <label class="field-label" for="ingredients-input"
+                >Paste the ingredients from the package</label
+              >
+              <textarea
+                id="ingredients-input"
+                rows="3"
+                placeholder="For example: oats, water, sunflower oil, sea salt"
+              ></textarea>
+              <div class="input-row ingredient-actions">
+                <p class="field-help">
+                  Separate ingredients with commas. We'll flag common things to
+                  look out for.
+                </p>
+                <button class="submit-button" type="submit">
+                  Check ingredients <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </form>
+
+            <div class="camera-row">
+              <button class="camera-button" id="open-camera" type="button">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 8.5h3l1.4-2h7.2l1.4 2h3v10H4z" />
+                  <circle cx="12" cy="13.5" r="3.3" />
+                </svg>
+                Scan a barcode
+              </button>
+              <button
+                class="camera-button"
+                id="open-label-camera"
+                type="button"
+              >
+                Photograph an ingredient label
+              </button>
+              <button class="camera-button" id="upload-label" type="button">
+                Upload a photo
+              </button>
+              <input
+                id="label-image-input"
+                type="file"
+                accept="image/*"
+                hidden
+              />
+            </div>
+            <div class="ocr-review" id="ocr-review" hidden>
+              <div class="ocr-review-heading">
+                <div>
+                  <p class="field-label">Check the extracted text</p>
+                  <p class="field-help" id="ocr-status">
+                    Correct any OCR mistakes before analyzing.
+                  </p>
+                </div>
+                <button
+                  class="ocr-clear"
+                  id="clear-ocr"
+                  type="button"
+                  aria-label="Clear scanned image and text"
+                >
+                  Clear
+                </button>
+              </div>
+              <img
+                class="ocr-preview"
+                id="label-image-preview"
+                alt="Uploaded ingredient label preview"
+                hidden
+              />
+              <label class="visually-hidden" for="ocr-text"
+                >Extracted ingredient text, editable</label
+              >
+              <textarea
+                id="ocr-text"
+                rows="5"
+                placeholder="Extracted ingredient text will appear here. You can edit it before checking."
+              ></textarea>
+              <div class="ocr-actions">
+                <span class="ocr-privacy"
+                  >Text is recognized in your browser; the image isn't sent to
+                  our server.</span
+                >
+                <button class="submit-button" id="analyze-ocr" type="button">
+                  Analyze text <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="feedback"
+              id="feedback"
+              role="status"
+              aria-live="polite"
+              hidden
+            ></div>
+          </div>
+
+          <aside class="try-panel" aria-label="Example products">
+            <div class="try-topline">
+              <span>NOT SURE WHERE TO START?</span
+              ><span aria-hidden="true">✳</span>
+            </div>
+            <h3>Pick a quick example</h3>
+            <div class="example-list">
+              <button
+                type="button"
+                class="example-item"
+                data-example="Greek yogurt"
+              >
+                <span
+                  class="example-icon example-icon--green"
+                  aria-hidden="true"
+                  >01</span
+                ><span
+                  ><strong>Greek yogurt</strong
+                  ><small>Simple, everyday staple</small></span
+                ><span class="example-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button
+                type="button"
+                class="example-item"
+                data-example="Crunchy granola"
+              >
+                <span
+                  class="example-icon example-icon--orange"
+                  aria-hidden="true"
+                  >02</span
+                ><span
+                  ><strong>Crunchy granola</strong
+                  ><small>A closer look at added sugar</small></span
+                ><span class="example-arrow" aria-hidden="true">↗</span>
+              </button>
+              <button
+                type="button"
+                class="example-item"
+                data-example="Oat milk"
+              >
+                <span class="example-icon example-icon--blue" aria-hidden="true"
+                  >03</span
+                ><span
+                  ><strong>Oat milk</strong
+                  ><small>See what's in the carton</small></span
+                ><span class="example-arrow" aria-hidden="true">↗</span>
+              </button>
+            </div>
+            <p class="demo-note">
+              Examples use sample data. Product searches use Open Food Facts.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section
+        class="results-section"
+        id="analysis"
+        aria-labelledby="analysis-title"
+        hidden
+      >
+        <div class="section-heading results-heading">
+          <div>
+            <p class="eyebrow">
+              <span class="eyebrow-number">02</span> Your product read
+            </p>
+            <h2 id="analysis-title">A clearer picture.</h2>
+          </div>
+          <button class="text-button" id="new-check" type="button">
+            Check another <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <div class="analysis-layout" id="analysis-content"></div>
+      </section>
+
+      <section
+        class="how-section"
+        id="how-it-works"
+        aria-labelledby="how-title"
+      >
+        <div class="how-heading">
+          <p class="eyebrow">
+            <span class="eyebrow-number">GOOD TO KNOW</span>
+          </p>
+          <h2 id="how-title">A helpful guide,<br /><em>not a rulebook.</em></h2>
+        </div>
+        <div class="how-steps">
+          <article class="how-step">
+            <span class="step-mark">A</span>
+            <h3>Good</h3>
+            <p>
+              A simpler ingredient list, with fewer common flags. A useful sign,
+              not a gold star.
+            </p>
+          </article>
+          <article class="how-step">
+            <span class="step-mark">B</span>
+            <h3>Okay</h3>
+            <p>
+              A mix of everyday ingredients and a few worth knowing about.
+              Context matters.
+            </p>
+          </article>
+          <article class="how-step">
+            <span class="step-mark">C</span>
+            <h3>Take a look</h3>
+            <p>
+              Some ingredients may be worth a closer read. Your needs and
+              preferences come first.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="alternatives-section"
+        id="alternatives"
+        aria-labelledby="alternatives-title"
+      >
+        <div class="alternatives-copy">
+          <p class="eyebrow">
+            <span class="eyebrow-number">03</span> Another option
+          </p>
+          <h2 id="alternatives-title">
+            Curious about<br /><em>something else?</em>
+          </h2>
+          <p>
+            When a product isn't quite your fit, a small swap can be a good
+            place to start. Your results will include a few alternatives to
+            explore.
+          </p>
+          <a class="alternatives-link" href="#scanner"
+            >Check a product <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="alternatives-image">
+          <img
+            src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85"
+            alt="A colorful bowl of fresh vegetables and grains"
+            loading="lazy"
+          />
+          <div class="image-label">
+            <span>GOOD FOOD, YOUR WAY</span><span aria-hidden="true">✳</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand brand--footer" href="#top"
+        ><span class="brand-mark" aria-hidden="true"
+          ><span></span><span></span><span></span></span
+        ><span>goodlabel</span></a
+      >
+      <p>For everyday food choices, made a little clearer.</p>
+      <span class="footer-disclaimer"
+        >Informational only. Not medical advice.</span
+      >
+    </footer>
+
+    <dialog
+      class="camera-dialog"
+      id="camera-dialog"
+      aria-labelledby="camera-title"
+    >
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow" id="camera-eyebrow">BARCODE SCAN</p>
+          <h2 id="camera-title">Point at the barcode.</h2>
+        </div>
+        <button
+          class="icon-button"
+          id="close-camera"
+          type="button"
+          aria-label="Close camera"
+        >
+          ×
+        </button>
+      </div>
+      <div class="camera-viewport">
+        <video id="camera-video" autoplay muted playsinline></video>
+        <div class="camera-placeholder" id="camera-placeholder">
+          <span class="camera-placeholder-icon" aria-hidden="true">⌗</span
+          ><span>Allow camera access to start scanning.</span>
+        </div>
+        <div class="scan-frame" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><i></i>
+        </div>
+      </div>
+      <p
+        class="camera-message"
+        id="camera-message"
+        role="status"
+        aria-live="polite"
+      >
+        Your camera stays on this device. Product details come from Open Food
+        Facts.
+      </p>
+      <button class="dialog-capture" id="capture-label" type="button" hidden>
+        Take label photo
+      </button>
+      <button class="dialog-upload" id="dialog-upload" type="button" hidden>
+        Upload a photo instead
+      </button>
+      <button
+        class="dialog-secondary"
+        id="close-camera-secondary"
+        type="button"
+      >
+        Close scanner
+      </button>
+    </dialog>
+  </body>
+</html>
